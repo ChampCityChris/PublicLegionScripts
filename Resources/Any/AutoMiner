@@ -1614,4 +1614,3 @@ while True:
             else:
                 API.Target(int(tile_pos.X), int(tile_pos.Y), int(tile_pos.Z), 0)
     _sleep(2.2)
-
