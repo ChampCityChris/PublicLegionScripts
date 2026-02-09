@@ -447,7 +447,7 @@ def _craft_with_tinker(button_id):
     if not tool:
         return False
     API.UseObject(tool.Serial)
-    gump_id = TINKER_GUMP_ID_UOALIVE if USE_UOALIVE_SHARD else TINKER_GUMP_ID_OSI
+    gump_id = TINKER_GUMP_ID_OSI
     if not API.WaitForGump(gump_id, 3):
         API.SysMsg("Tinker gump not found.")
         return False
@@ -469,6 +469,9 @@ def _craft_with_tinker_uoalive(button_id):
         return False
     _sleep(0.5)
     API.ReplyGump(int(TINKER_BTN_TOOLS_UOALIVE), TINKER_GUMP_ID_UOALIVE)
+    if not API.WaitForGump(TINKER_GUMP_ID_UOALIVE, 3):
+        API.SysMsg("Tinker gump not found after Tools category.")
+        return False
     _sleep(0.5)
     API.ReplyGump(int(button_id), TINKER_GUMP_ID_UOALIVE)
     _sleep(0.5)
@@ -1519,7 +1522,10 @@ def _mine_adjacent_tiles(mine_tools):
                     else:
                         API.TargetTileRel(relx, rely, int(tile.Graphic))
                 else:
-                    API.TargetTileRel(relx, rely, int(tile.Graphic))
+                    if tile_is_land:
+                        API.TargetLandRel(relx, rely)
+                    else:
+                        API.TargetTileRel(relx, rely, int(tile.Graphic))
                 _sleep(0.2)
                 if DEBUG_TARGETING:
                     _debug(f"MineTarget: retry alt order rel=({relx},{rely})")
@@ -1608,3 +1614,4 @@ while True:
             else:
                 API.Target(int(tile_pos.X), int(tile_pos.Y), int(tile_pos.Z), 0)
     _sleep(2.2)
+
